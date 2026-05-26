@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --sat: env(safe-area-inset-top);
+    --sar: env(safe-area-inset-right);
+    --sab: env(safe-area-inset-bottom);
+    --sal: env(safe-area-inset-left);
+  }
+
+  body {
+    padding-top: var(--sat);
+    padding-bottom: var(--sab);
+    padding-left: var(--sal);
+    padding-right: var(--sar);
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+@layer components {
+  /* Premium Glassmorphism Card styling */
+  .glass-card {
+    @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-premium rounded-2xl;
+  }
+
+  .glass-card-hover {
+    @apply hover:bg-white/80 transition-all duration-300 hover:shadow-premium-hover;
+  }
+
+  /* Responsive bottom sheet for mobile drawer */
+  .bottom-sheet {
+    @apply fixed inset-x-0 bottom-0 z-50 bg-white rounded-t-3xl border-t border-slate-100 shadow-2xl transition-transform duration-300 ease-out;
+  }
+
+  /* Accessible Focus Rings */
+  .focus-ring {
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2;
+  }
+
+  /* Custom navigation link styles */
+  .nav-link {
+    @apply flex flex-col items-center justify-center text-xs font-medium text-slate-500 hover:text-teal-600 transition-colors;
+  }
+
+  .nav-link-active {
+    @apply nav-link text-teal-600 font-semibold;
+  }
+}
+
+/* Custom styles for animations and layout adjustments */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
