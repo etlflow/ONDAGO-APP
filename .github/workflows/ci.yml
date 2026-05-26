@@ -1,0 +1,44 @@
+name: ONDAGO CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+    branches:
+      - master
+      - main
+
+jobs:
+  audit-and-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Security Audit
+        # Runs npm audit and fails on high/critical findings
+        run: npm audit --audit-level=high
+
+      - name: Build React Frontend
+        run: npm run build
+
+      - name: Authenticated Firebase Deploy
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ONDAGO_F973B }}'
+          channelId: live
+          projectId: ondago-f973b

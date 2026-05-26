@@ -1,0 +1,24 @@
+.DS_Store
+
+# Local environment
+.env
+.env.*
+!.env.example
+
+# Dependencies
+node_modules/
+functions/node_modules/
+
+# Build output
+dist/
+.firebase/
+
+# Logs
+*.log
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# Editor and OS files
+.idea/
+.vscode/

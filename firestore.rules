@@ -1,0 +1,37 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // No unauthenticated reads or writes anywhere
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    match /users/{uid} {
+      allow read, update: if request.auth != null
+                          && request.auth.uid == uid
+                          && request.auth.token.email_verified == true;
+      allow create: if request.auth != null
+                    && request.auth.uid == uid;
+
+      match /trips/{tripId} {
+        allow read, write: if request.auth != null
+                           && request.auth.uid == uid
+                           && validTrip(request.resource.data);
+      }
+    }
+
+    // Shareable trip — read-only, validated token, no UID exposed
+    match /sharedTrips/{tokenId} {
+      allow read: if resource.data.expiresAt > request.time;
+      allow write: if false; // written only by Cloud Function
+    }
+
+    function validTrip(data) {
+      return data.flightNumber is string
+          && data.flightNumber.size() <= 10
+          && data.origin is string
+          && data.destination is string;
+    }
+  }
+}
